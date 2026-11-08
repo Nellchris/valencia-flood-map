@@ -668,8 +668,10 @@ function renderMethods(s) {
 
     <h3>More</h3>
     <ul>
-      <li><a href="#">Full report (placeholder)</a></li>
-      <li><a href="#">Source code (placeholder)</a></li>
+      <li><a href="https://nellchris.github.io/valencia-flood-map/report/"
+             target="_blank" rel="noopener">Full technical report</a></li>
+      <li><a href="https://github.com/Nellchris/valencia-flood-map"
+             target="_blank" rel="noopener">Source code on GitHub</a></li>
     </ul>`;
 }
 
