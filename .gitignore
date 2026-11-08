@@ -1,0 +1,16 @@
+# Raw data (too large for GitHub)
+*.zip
+*.tif
+processed/
+screenshots/
+__pycache__/
+.DS_Store
+*.pyc
+
+# Canonical export set — byte-identical duplicate of site/webmap/, which is
+# what actually gets deployed. Committing both would double the repo.
+/webmap/
+
+# Local scratch
+.claude/
+valencia_webmap_prompt.md

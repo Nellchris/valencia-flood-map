@@ -1,0 +1,1056 @@
+{
+ "generated": "2026-11-06",
+ "event": {
+  "name": "Valencia flash flood (DANA)",
+  "date": "2024-10-29",
+  "ems_activation": "EMSR773"
+ },
+ "study_area": {
+  "bbox_wgs84": [
+   -0.6,
+   39.3,
+   -0.2,
+   39.6
+  ],
+  "crs": "EPSG:32630",
+  "resolution_m": 10.0,
+  "grid": [
+   3345,
+   3230
+  ],
+  "area_km2": 1080.43
+ },
+ "imagery": {
+  "pre": {
+   "scene": "S1A_IW_20241020T060207_DVP_RTC10_G_gpunem_6499",
+   "acquired": "2024-10-20T06:02:07Z"
+  },
+  "post": {
+   "scene": "S1A_IW_20241101T060207_DVP_RTC10_G_gpunem_758C",
+   "acquired": "2024-11-01T06:02:07Z"
+  },
+  "lag_after_peak_hours": 19.7,
+  "note": "The post-event pass is ~3 days after the 29 Oct peak and 19.7 h after the flood crest in the reference imagery; much of the flash flood had already drained."
+ },
+ "model": {
+  "type": "RandomForestClassifier",
+  "n_estimators": 200,
+  "max_depth": 15,
+  "class_weight": "balanced",
+  "features": [
+   "delta_vv",
+   "delta_vh",
+   "slope",
+   "hand",
+   "dist_river",
+   "lc_10",
+   "lc_20",
+   "lc_30",
+   "lc_40",
+   "lc_50",
+   "lc_60",
+   "lc_90"
+  ],
+  "importance_random_cv": {
+   "delta_vv": 0.1413,
+   "delta_vh": 0.1004,
+   "slope": 0.0896,
+   "hand": 0.3961,
+   "dist_river": 0.1961,
+   "lc_10": 0.0184,
+   "lc_20": 0.0046,
+   "lc_30": 0.0046,
+   "lc_40": 0.017,
+   "lc_50": 0.0148,
+   "lc_60": 0.002,
+   "lc_90": 0.0149
+  },
+  "importance_spatial_cv_2km": {
+   "delta_vv": 0.1234,
+   "delta_vh": 0.088,
+   "slope": 0.0982,
+   "hand": 0.3944,
+   "dist_river": 0.2047,
+   "lc_10": 0.0267,
+   "lc_20": 0.0066,
+   "lc_30": 0.0057,
+   "lc_40": 0.0215,
+   "lc_50": 0.0142,
+   "lc_60": 0.0025,
+   "lc_90": 0.014
+  },
+  "training_pixels": 300000
+ },
+ "baseline_otsu": {
+  "threshold_db": -0.442,
+  "literature_manual_threshold_db": -3.0
+ },
+ "validation": {
+  "headline": {
+   "random_f1": 0.5051,
+   "spatial2_f1": 0.4191,
+   "random_iou": 0.3379,
+   "spatial2_iou": 0.2664
+  },
+  "f1_optimism_absolute": 0.086,
+  "f1_optimism_percent": 17.0,
+  "by_method": [
+   {
+    "method": "random",
+    "block_size_km": null,
+    "mean": {
+     "iou": 0.3379,
+     "f1": 0.5051,
+     "precision": 0.3663,
+     "recall": 0.8135
+    },
+    "sd": {
+     "iou": 0.0008,
+     "f1": 0.0009,
+     "precision": 0.0014,
+     "recall": 0.0031
+    },
+    "folds": [
+     {
+      "fold": 0,
+      "iou": 0.3383,
+      "f1": 0.5056,
+      "precision": 0.3674,
+      "recall": 0.8102,
+      "test_pos_rate": 0.1736
+     },
+     {
+      "fold": 1,
+      "iou": 0.3385,
+      "f1": 0.5058,
+      "precision": 0.3665,
+      "recall": 0.8157,
+      "test_pos_rate": 0.1736
+     },
+     {
+      "fold": 2,
+      "iou": 0.337,
+      "f1": 0.5042,
+      "precision": 0.3645,
+      "recall": 0.8173,
+      "test_pos_rate": 0.1736
+     },
+     {
+      "fold": 3,
+      "iou": 0.3371,
+      "f1": 0.5042,
+      "precision": 0.3653,
+      "recall": 0.8137,
+      "test_pos_rate": 0.1736
+     },
+     {
+      "fold": 4,
+      "iou": 0.3387,
+      "f1": 0.506,
+      "precision": 0.3678,
+      "recall": 0.8106,
+      "test_pos_rate": 0.1736
+     }
+    ]
+   },
+   {
+    "method": "spatial_1km",
+    "block_size_km": 1.0,
+    "mean": {
+     "iou": 0.1897,
+     "f1": 0.3083,
+     "precision": 0.2554,
+     "recall": 0.4877
+    },
+    "sd": {
+     "iou": 0.1051,
+     "f1": 0.1509,
+     "precision": 0.1768,
+     "recall": 0.0838
+    },
+    "folds": [
+     {
+      "fold": 0,
+      "iou": 0.1944,
+      "f1": 0.3255,
+      "precision": 0.224,
+      "recall": 0.5952,
+      "test_pos_rate": 0.1097
+     },
+     {
+      "fold": 1,
+      "iou": 0.1383,
+      "f1": 0.243,
+      "precision": 0.1576,
+      "recall": 0.5305,
+      "test_pos_rate": 0.0529
+     },
+     {
+      "fold": 2,
+      "iou": 0.2358,
+      "f1": 0.3816,
+      "precision": 0.3221,
+      "recall": 0.4682,
+      "test_pos_rate": 0.1311
+     },
+     {
+      "fold": 3,
+      "iou": 0.3304,
+      "f1": 0.4967,
+      "precision": 0.5192,
+      "recall": 0.4762,
+      "test_pos_rate": 0.1234
+     },
+     {
+      "fold": 4,
+      "iou": 0.0497,
+      "f1": 0.0946,
+      "precision": 0.0543,
+      "recall": 0.3687,
+      "test_pos_rate": 0.0294
+     }
+    ]
+   },
+   {
+    "method": "spatial_2km",
+    "block_size_km": 2.0,
+    "mean": {
+     "iou": 0.2664,
+     "f1": 0.4191,
+     "precision": 0.3096,
+     "recall": 0.6942
+    },
+    "sd": {
+     "iou": 0.0445,
+     "f1": 0.0556,
+     "precision": 0.0635,
+     "recall": 0.1441
+    },
+    "folds": [
+     {
+      "fold": 0,
+      "iou": 0.2318,
+      "f1": 0.3763,
+      "precision": 0.3015,
+      "recall": 0.5006,
+      "test_pos_rate": 0.1269
+     },
+     {
+      "fold": 1,
+      "iou": 0.3152,
+      "f1": 0.4793,
+      "precision": 0.4008,
+      "recall": 0.5961,
+      "test_pos_rate": 0.1519
+     },
+     {
+      "fold": 2,
+      "iou": 0.215,
+      "f1": 0.354,
+      "precision": 0.2254,
+      "recall": 0.8232,
+      "test_pos_rate": 0.1353
+     },
+     {
+      "fold": 3,
+      "iou": 0.3076,
+      "f1": 0.4704,
+      "precision": 0.3282,
+      "recall": 0.8305,
+      "test_pos_rate": 0.1718
+     },
+     {
+      "fold": 4,
+      "iou": 0.2623,
+      "f1": 0.4156,
+      "precision": 0.292,
+      "recall": 0.7206,
+      "test_pos_rate": 0.1825
+     }
+    ]
+   },
+   {
+    "method": "spatial_4km",
+    "block_size_km": 4.0,
+    "mean": {
+     "iou": 0.297,
+     "f1": 0.4502,
+     "precision": 0.3456,
+     "recall": 0.7566
+    },
+    "sd": {
+     "iou": 0.1013,
+     "f1": 0.1257,
+     "precision": 0.1478,
+     "recall": 0.1115
+    },
+    "folds": [
+     {
+      "fold": 0,
+      "iou": 0.2878,
+      "f1": 0.447,
+      "precision": 0.297,
+      "recall": 0.9031,
+      "test_pos_rate": 0.1366
+     },
+     {
+      "fold": 1,
+      "iou": 0.3836,
+      "f1": 0.5545,
+      "precision": 0.5207,
+      "recall": 0.593,
+      "test_pos_rate": 0.2679
+     },
+     {
+      "fold": 2,
+      "iou": 0.1476,
+      "f1": 0.2572,
+      "precision": 0.1543,
+      "recall": 0.7735,
+      "test_pos_rate": 0.0894
+     },
+     {
+      "fold": 3,
+      "iou": 0.3983,
+      "f1": 0.5697,
+      "precision": 0.4665,
+      "recall": 0.7316,
+      "test_pos_rate": 0.2408
+     },
+     {
+      "fold": 4,
+      "iou": 0.2678,
+      "f1": 0.4224,
+      "precision": 0.2894,
+      "recall": 0.7817,
+      "test_pos_rate": 0.1363
+     }
+    ]
+   }
+  ],
+  "protocol": {
+   "folds": 5,
+   "buffer_m": 500,
+   "block_sizes_km": [
+    1,
+    2,
+    4
+   ],
+   "note": "Random and spatial CV differ only in fold assignment; training budget, model settings and test-fold evaluation are identical."
+  }
+ },
+ "confidence": {
+  "thresholds": {
+   "low": 0.7,
+   "medium": 0.8,
+   "high": 0.9
+  },
+  "threshold_basis": "out-of-fold (spatial 2 km) decile error rates; replaces the originally specified 0.3/0.5/0.8",
+  "error_rates": [
+   {
+    "set": "IN-SAMPLE (optimistic)",
+    "class": "HIGH",
+    "n_px": 222068,
+    "area_km2": 22.21,
+    "true_flood_rate": 0.9919,
+    "error_rate": 0.0081
+   },
+   {
+    "set": "IN-SAMPLE (optimistic)",
+    "class": "MEDIUM",
+    "n_px": 71117,
+    "area_km2": 7.11,
+    "true_flood_rate": 0.7148,
+    "error_rate": 0.2852
+   },
+   {
+    "set": "IN-SAMPLE (optimistic)",
+    "class": "LOW",
+    "n_px": 329284,
+    "area_km2": 32.93,
+    "true_flood_rate": 0.4518,
+    "error_rate": 0.5482
+   },
+   {
+    "set": "IN-SAMPLE (optimistic)",
+    "class": "not flooded",
+    "n_px": 5479110,
+    "area_km2": 547.91,
+    "true_flood_rate": 0.1167,
+    "error_rate": 0.1167
+   },
+   {
+    "set": "OUT-OF-FOLD spatial 2 km (honest)",
+    "class": "HIGH",
+    "n_px": 63353,
+    "area_km2": 6.34,
+    "true_flood_rate": 0.9903,
+    "error_rate": 0.0097
+   },
+   {
+    "set": "OUT-OF-FOLD spatial 2 km (honest)",
+    "class": "MEDIUM",
+    "n_px": 43024,
+    "area_km2": 4.3,
+    "true_flood_rate": 0.5378,
+    "error_rate": 0.4622
+   },
+   {
+    "set": "OUT-OF-FOLD spatial 2 km (honest)",
+    "class": "LOW",
+    "n_px": 140470,
+    "area_km2": 14.05,
+    "true_flood_rate": 0.3351,
+    "error_rate": 0.6649
+   },
+   {
+    "set": "OUT-OF-FOLD spatial 2 km (honest)",
+    "class": "not flooded",
+    "n_px": 2158764,
+    "area_km2": 215.88,
+    "true_flood_rate": 0.1097,
+    "error_rate": 0.1097
+   }
+  ],
+  "by_landcover": [
+   {
+    "landcover": "10 Tree cover",
+    "class": "MEDIUM",
+    "n_px": 387,
+    "error_rate": 0.6202
+   },
+   {
+    "landcover": "10 Tree cover",
+    "class": "LOW",
+    "n_px": 4064,
+    "error_rate": 0.7862
+   },
+   {
+    "landcover": "20 Shrubland",
+    "class": "LOW",
+    "n_px": 558,
+    "error_rate": 0.7401
+   },
+   {
+    "landcover": "30 Grassland",
+    "class": "HIGH",
+    "n_px": 1833,
+    "error_rate": 0.036
+   },
+   {
+    "landcover": "30 Grassland",
+    "class": "MEDIUM",
+    "n_px": 8086,
+    "error_rate": 0.4676
+   },
+   {
+    "landcover": "30 Grassland",
+    "class": "LOW",
+    "n_px": 69429,
+    "error_rate": 0.6747
+   },
+   {
+    "landcover": "40 Cropland",
+    "class": "HIGH",
+    "n_px": 42692,
+    "error_rate": 0.0074
+   },
+   {
+    "landcover": "40 Cropland",
+    "class": "MEDIUM",
+    "n_px": 24474,
+    "error_rate": 0.4561
+   },
+   {
+    "landcover": "40 Cropland",
+    "class": "LOW",
+    "n_px": 39420,
+    "error_rate": 0.6586
+   },
+   {
+    "landcover": "50 Built-up",
+    "class": "MEDIUM",
+    "n_px": 6722,
+    "error_rate": 0.5785
+   },
+   {
+    "landcover": "50 Built-up",
+    "class": "LOW",
+    "n_px": 22649,
+    "error_rate": 0.6526
+   },
+   {
+    "landcover": "60 Bare/sparse veg",
+    "class": "MEDIUM",
+    "n_px": 242,
+    "error_rate": 0.8471
+   },
+   {
+    "landcover": "60 Bare/sparse veg",
+    "class": "LOW",
+    "n_px": 2565,
+    "error_rate": 0.8062
+   },
+   {
+    "landcover": "90 Herbaceous wetland",
+    "class": "HIGH",
+    "n_px": 18764,
+    "error_rate": 0.0114
+   },
+   {
+    "landcover": "90 Herbaceous wetland",
+    "class": "MEDIUM",
+    "n_px": 3077,
+    "error_rate": 0.1859
+   },
+   {
+    "landcover": "90 Herbaceous wetland",
+    "class": "LOW",
+    "n_px": 1785,
+    "error_rate": 0.0773
+   }
+  ],
+  "calibration_deciles": [
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.0,
+    "hi": 0.1,
+    "n_px": 814295,
+    "flood_rate": 0.021
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.1,
+    "hi": 0.2,
+    "n_px": 154811,
+    "flood_rate": 0.0806
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.2,
+    "hi": 0.3,
+    "n_px": 160527,
+    "flood_rate": 0.108
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.3,
+    "hi": 0.4,
+    "n_px": 185241,
+    "flood_rate": 0.1309
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.4,
+    "hi": 0.5,
+    "n_px": 234364,
+    "flood_rate": 0.1659
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.5,
+    "hi": 0.6,
+    "n_px": 327165,
+    "flood_rate": 0.1936
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.6,
+    "hi": 0.7,
+    "n_px": 282362,
+    "flood_rate": 0.2249
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.7,
+    "hi": 0.8,
+    "n_px": 138449,
+    "flood_rate": 0.3326
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.8,
+    "hi": 0.9,
+    "n_px": 43325,
+    "flood_rate": 0.5354
+   },
+   {
+    "set": "OUT-OF-FOLD (spatial 2 km)",
+    "lo": 0.9,
+    "hi": 1.0,
+    "n_px": 65072,
+    "flood_rate": 0.9789
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.0,
+    "hi": 0.1,
+    "n_px": 1891535,
+    "flood_rate": 0.0032
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.1,
+    "hi": 0.2,
+    "n_px": 393390,
+    "flood_rate": 0.0366
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.2,
+    "hi": 0.3,
+    "n_px": 422252,
+    "flood_rate": 0.0709
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.3,
+    "hi": 0.4,
+    "n_px": 422735,
+    "flood_rate": 0.1102
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.4,
+    "hi": 0.5,
+    "n_px": 629619,
+    "flood_rate": 0.1554
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.5,
+    "hi": 0.6,
+    "n_px": 891827,
+    "flood_rate": 0.217
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.6,
+    "hi": 0.7,
+    "n_px": 827748,
+    "flood_rate": 0.3035
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.7,
+    "hi": 0.8,
+    "n_px": 320862,
+    "flood_rate": 0.4443
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.8,
+    "hi": 0.9,
+    "n_px": 69071,
+    "flood_rate": 0.687
+   },
+   {
+    "set": "IN-SAMPLE (Step 4 model)",
+    "lo": 0.9,
+    "hi": 1.0,
+    "n_px": 232534,
+    "flood_rate": 0.9885
+   }
+  ]
+ },
+ "exposure": {
+  "osm_totals": {
+   "buildings": 126337,
+   "road_km": 9066.8
+  },
+  "estimates": [
+   {
+    "estimate": "lower (HIGH only)",
+    "definition": "confidence==1  (p>=0.90 + Otsu agreement)",
+    "area_km2": 22.21,
+    "buildings": 9,
+    "road_km": 95.82,
+    "pct_of_all_buildings": 0.007,
+    "pct_of_all_road_km": 1.057
+   },
+   {
+    "estimate": "moderate (HIGH+MEDIUM)",
+    "definition": "confidence in {1,2}  (p>=0.80)",
+    "area_km2": 29.32,
+    "buildings": 385,
+    "road_km": 192.9,
+    "pct_of_all_buildings": 0.305,
+    "pct_of_all_road_km": 2.128
+   },
+   {
+    "estimate": "central (full RF footprint)",
+    "definition": "flood_rf==1  (p>0.50)",
+    "area_km2": 234.2,
+    "buildings": 23732,
+    "road_km": 3056.98,
+    "pct_of_all_buildings": 18.785,
+    "pct_of_all_road_km": 33.716
+   },
+   {
+    "estimate": "upper (footprint + LOW)",
+    "definition": "central UNION confidence in {1,2,3}; IDENTICAL to central (LOW band is p>=0.70)",
+    "area_km2": 234.2,
+    "buildings": 23732,
+    "road_km": 3056.98,
+    "pct_of_all_buildings": 18.785,
+    "pct_of_all_road_km": 33.716
+   },
+   {
+    "estimate": "upper_extended (p>0.40)",
+    "definition": "RF probability >0.40 (added; original 'upper' is degenerate). 16.6% OOF flood rate = no skill",
+    "area_km2": 297.17,
+    "buildings": 40870,
+    "road_km": 3980.61,
+    "pct_of_all_buildings": 32.35,
+    "pct_of_all_road_km": 43.903
+   },
+   {
+    "estimate": "EMS reference (EMSR773)",
+    "definition": "Copernicus EMS observed flood, rasterised to grid",
+    "area_km2": 126.98,
+    "buildings": 9827,
+    "road_km": 1429.19,
+    "pct_of_all_buildings": 7.778,
+    "pct_of_all_road_km": 15.763
+   }
+  ],
+  "vs_reference": [
+   {
+    "estimate": "lower (HIGH only)",
+    "buildings": {
+     "tp": 8,
+     "fp": 1,
+     "fn": 9819,
+     "precision": 0.8889,
+     "recall": 0.0008,
+     "f1": 0.0016
+    },
+    "roads": {
+     "tp_km": 95.17,
+     "fp_km": 0.64,
+     "precision": 0.9933,
+     "recall": 0.0666,
+     "f1": 0.1248
+    }
+   },
+   {
+    "estimate": "moderate (HIGH+MEDIUM)",
+    "buildings": {
+     "tp": 179,
+     "fp": 206,
+     "fn": 9648,
+     "precision": 0.4649,
+     "recall": 0.0182,
+     "f1": 0.0351
+    },
+    "roads": {
+     "tp_km": 165.07,
+     "fp_km": 27.83,
+     "precision": 0.8557,
+     "recall": 0.1155,
+     "f1": 0.2035
+    }
+   },
+   {
+    "estimate": "central (full RF footprint)",
+    "buildings": {
+     "tp": 4865,
+     "fp": 18867,
+     "fn": 4962,
+     "precision": 0.205,
+     "recall": 0.4951,
+     "f1": 0.2899
+    },
+    "roads": {
+     "tp_km": 1025.72,
+     "fp_km": 2031.26,
+     "precision": 0.3355,
+     "recall": 0.7177,
+     "f1": 0.4573
+    }
+   },
+   {
+    "estimate": "upper (footprint + LOW)",
+    "buildings": {
+     "tp": 4865,
+     "fp": 18867,
+     "fn": 4962,
+     "precision": 0.205,
+     "recall": 0.4951,
+     "f1": 0.2899
+    },
+    "roads": {
+     "tp_km": 1025.72,
+     "fp_km": 2031.26,
+     "precision": 0.3355,
+     "recall": 0.7177,
+     "f1": 0.4573
+    }
+   },
+   {
+    "estimate": "upper_extended (p>0.40)",
+    "buildings": {
+     "tp": 7285,
+     "fp": 33585,
+     "fn": 2542,
+     "precision": 0.1782,
+     "recall": 0.7413,
+     "f1": 0.2874
+    },
+    "roads": {
+     "tp_km": 1177.7,
+     "fp_km": 2802.9,
+     "precision": 0.2959,
+     "recall": 0.824,
+     "f1": 0.4354
+    }
+   }
+  ],
+  "caveats": [
+   "'upper' is identical to 'central': the data-driven LOW band (p>=0.70) lies inside the p>0.5 footprint, so the union adds nothing.",
+   "90% of the central estimate's buildings (21,351 of 23,732) fall in the 0.50-0.70 probability band, which has ~20% out-of-fold flood rate against a 15.4% base rate -- i.e. no skill.",
+   "HIGH confidence is effectively unreachable on built-up land (4 of 63,353 HIGH pixels), so the lower bound holds 9 buildings.",
+   "3.0% of reference buildings and 7.5% of reference road km lie outside the Sentinel-1 swath."
+  ]
+ },
+ "reference": {
+  "activation": "EMSR773",
+  "aois": [
+   "AOI01",
+   "AOI02",
+   "AOI03"
+  ],
+  "note": "AOI02 lies entirely outside the study box.",
+  "area_km2_in_grid": 126.98,
+  "sensor_area_km2": {
+   "Landsat-8": 69.69,
+   "Sentinel-1": 0.79,
+   "Sentinel-2": 47.2,
+   "GeoEye-1": 17.9,
+   "WorldView-2": 6.17
+  },
+  "sentinel1_share_pct": 0.56,
+  "circularity": "The delineation this model is validated against is overwhelmingly optical (Sentinel-2, Landsat-8, GeoEye-1, WorldView-2). Only 0.56% of the reference area was derived from Sentinel-1, so validating a Sentinel-1 model against it is not circular."
+ },
+ "layers": {
+  "flood_footprint.geojson": {
+   "type": "polygon",
+   "crs": "EPSG:4326",
+   "mmu_px": 10,
+   "simplify_m": 10.0,
+   "represents": "central estimate (RF p>0.5)"
+  },
+  "confidence.png": {
+   "type": "image_overlay",
+   "crs": "EPSG:4326",
+   "bounds_wgs84": [
+    -0.599599,
+    39.300355,
+    -0.200415,
+    39.599743
+   ],
+   "classes": {
+    "high": "#0d9488",
+    "medium": "#f59e0b",
+    "low": "#ea580c"
+   },
+   "note": "lossless: no MMU and no simplification. Re-rendered in a colour-vision-safe teal/amber/red-orange ramp; the earlier dark-green/red ramp was a red-green pair. Below 0.70 probability is transparent (no confidence class)."
+  },
+  "flood_reference.geojson": {
+   "type": "polygon",
+   "crs": "EPSG:4326"
+  },
+  "buildings_affected.geojson": {
+   "type": "point",
+   "crs": "EPSG:4326",
+   "note": "OSM building centroids"
+  },
+  "roads_affected.geojson": {
+   "type": "line",
+   "crs": "EPSG:4326",
+   "simplify_m": 2.0
+  },
+  "pre_radar.jpg": {
+   "type": "image_overlay",
+   "crs": "EPSG:4326",
+   "bounds_wgs84": [
+    -0.599599,
+    39.300355,
+    -0.200415,
+    39.599743
+   ],
+   "stretch_db": [
+    -22.36017993927002,
+    2.23508964061737
+   ],
+   "band": "VV gamma0 dB",
+   "format": "JPEG",
+   "quality": 85,
+   "alpha": "none in the JPEG; pre_radar_mask.png is a 1-bit swath mask on the same grid (255 = inside the Sentinel-1 swath). The web map composites the two onto a canvas to get transparency."
+  },
+  "post_radar.jpg": {
+   "type": "image_overlay",
+   "crs": "EPSG:4326",
+   "bounds_wgs84": [
+    -0.599599,
+    39.300355,
+    -0.200415,
+    39.599743
+   ],
+   "stretch_db": [
+    -23.42189308166504,
+    3.0608714914322017
+   ],
+   "band": "VV gamma0 dB",
+   "format": "JPEG",
+   "quality": 85,
+   "alpha": "none in the JPEG; post_radar_mask.png is a 1-bit swath mask on the same grid (255 = inside the Sentinel-1 swath). The web map composites the two onto a canvas to get transparency."
+  },
+  "pre_radar_mask.png": {
+   "type": "alpha_mask",
+   "crs": "EPSG:4326",
+   "bounds_wgs84": [
+    -0.599599,
+    39.300355,
+    -0.200415,
+    39.599743
+   ],
+   "for": "pre_radar.jpg",
+   "note": "1-bit; 255 = valid radar, 0 = outside swath"
+  },
+  "post_radar_mask.png": {
+   "type": "alpha_mask",
+   "crs": "EPSG:4326",
+   "bounds_wgs84": [
+    -0.599599,
+    39.300355,
+    -0.200415,
+    39.599743
+   ],
+   "for": "post_radar.jpg",
+   "note": "1-bit; 255 = valid radar, 0 = outside swath"
+  }
+ },
+ "provenance": [
+  {
+   "name": "Sentinel-1A RTC, pre-event",
+   "provider": "ASF HyP3 (GAMMA RTC) / Copernicus Sentinel-1",
+   "sensor": "Sentinel-1A C-band SAR (IW, VV+VH)",
+   "acquired": "2024-10-20T06:02:07Z",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus Sentinel data 2024; CC-BY 4.0 (HyP3 products)",
+   "url": "https://search.asf.alaska.edu/",
+   "role": "pre-event backscatter"
+  },
+  {
+   "name": "Sentinel-1A RTC, post-event",
+   "provider": "ASF HyP3 (GAMMA RTC) / Copernicus Sentinel-1",
+   "sensor": "Sentinel-1A C-band SAR (IW, VV+VH)",
+   "acquired": "2024-11-01T06:02:07Z",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus Sentinel data 2024; CC-BY 4.0 (HyP3 products)",
+   "url": "https://search.asf.alaska.edu/",
+   "role": "post-event backscatter"
+  },
+  {
+   "name": "Copernicus DEM GLO-30",
+   "provider": "ESA / Copernicus",
+   "sensor": "TanDEM-X (bistatic InSAR)",
+   "acquired": "2011-2015",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus DEM free, full and open licence",
+   "url": "https://spacedata.copernicus.eu/collections/copernicus-digital-elevation-model",
+   "role": "slope, HAND"
+  },
+  {
+   "name": "ESA WorldCover 10 m v200",
+   "provider": "ESA WorldCover consortium",
+   "sensor": "Sentinel-1 + Sentinel-2 (2021 composite)",
+   "acquired": "2021",
+   "accessed": "2026-11-06",
+   "licence": "CC-BY 4.0",
+   "url": "https://esa-worldcover.org/",
+   "role": "land-cover feature; permanent-water mask"
+  },
+  {
+   "name": "OpenStreetMap waterways",
+   "provider": "OpenStreetMap contributors",
+   "sensor": "n/a (crowd-sourced vector)",
+   "acquired": "2026-11-06",
+   "accessed": "2026-11-06",
+   "licence": "Open Database License (ODbL) 1.0",
+   "url": "https://overpass-api.de/api/interpreter",
+   "role": "dist_river feature"
+  },
+  {
+   "name": "OpenStreetMap buildings",
+   "provider": "OpenStreetMap contributors",
+   "sensor": "n/a (crowd-sourced vector)",
+   "acquired": "2026-11-06",
+   "accessed": "2026-11-06",
+   "licence": "Open Database License (ODbL) 1.0",
+   "url": "https://overpass-api.de/api/interpreter",
+   "role": "exposure: building counts"
+  },
+  {
+   "name": "OpenStreetMap roads",
+   "provider": "OpenStreetMap contributors",
+   "sensor": "n/a (crowd-sourced vector)",
+   "acquired": "2026-11-06",
+   "accessed": "2026-11-06",
+   "licence": "Open Database License (ODbL) 1.0",
+   "url": "https://overpass-api.de/api/interpreter",
+   "role": "exposure: road length"
+  },
+  {
+   "name": "Copernicus EMS EMSR773 observed flood, AOI01 (Landsat-8)",
+   "provider": "Copernicus Emergency Management Service, Rapid Mapping",
+   "sensor": "Landsat-8",
+   "acquired": "2024-10-30 / 2024-11-02",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus EMS data policy (free, full and open)",
+   "url": "https://rapidmapping.emergency.copernicus.eu/EMSR773/",
+   "role": "validation reference (ground truth)"
+  },
+  {
+   "name": "Copernicus EMS EMSR773 observed flood, AOI01 (Sentinel-1)",
+   "provider": "Copernicus Emergency Management Service, Rapid Mapping",
+   "sensor": "Sentinel-1",
+   "acquired": "2024-10-30 / 2024-11-02",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus EMS data policy (free, full and open)",
+   "url": "https://rapidmapping.emergency.copernicus.eu/EMSR773/",
+   "role": "validation reference (ground truth)"
+  },
+  {
+   "name": "Copernicus EMS EMSR773 observed flood, AOI01 (Sentinel-2)",
+   "provider": "Copernicus Emergency Management Service, Rapid Mapping",
+   "sensor": "Sentinel-2",
+   "acquired": "2024-10-30 / 2024-11-02",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus EMS data policy (free, full and open)",
+   "url": "https://rapidmapping.emergency.copernicus.eu/EMSR773/",
+   "role": "validation reference (ground truth)"
+  },
+  {
+   "name": "Copernicus EMS EMSR773 observed flood, AOI03 (GeoEye-1)",
+   "provider": "Copernicus Emergency Management Service, Rapid Mapping",
+   "sensor": "GeoEye-1",
+   "acquired": "2024-10-30 / 2024-11-02",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus EMS data policy (free, full and open)",
+   "url": "https://rapidmapping.emergency.copernicus.eu/EMSR773/",
+   "role": "validation reference (ground truth)"
+  },
+  {
+   "name": "Copernicus EMS EMSR773 observed flood, AOI03 (WorldView-2)",
+   "provider": "Copernicus Emergency Management Service, Rapid Mapping",
+   "sensor": "WorldView-2",
+   "acquired": "2024-10-30 / 2024-11-02",
+   "accessed": "2026-11-06",
+   "licence": "Copernicus EMS data policy (free, full and open)",
+   "url": "https://rapidmapping.emergency.copernicus.eu/EMSR773/",
+   "role": "validation reference (ground truth)"
+  }
+ ]
+}

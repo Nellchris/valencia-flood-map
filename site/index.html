@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>Valencia Flood Map — Sentinel-1, October 2024</title>
+<meta name="description" content="Sentinel-1 radar flood map of the October 2024 Valencia flash flood, with explicit confidence, validation and exposure.">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<link rel="stylesheet" href="https://unpkg.com/@maplibre/maplibre-gl-compare@0.5.0/dist/maplibre-gl-compare.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="topbar">
+  <h1>Valencia flash flood, October 2024 <span class="sub">Sentinel-1 radar</span></h1>
+  <p id="tagline">Blue shows where the model found flooding.
+     <strong>Toggle “Confidence” to see where the map is least trustworthy.</strong></p>
+</header>
+
+<main id="mapwrap">
+  <div id="comparison-container" class="no-compare">
+    <div id="before" class="map" role="application" aria-label="Map, radar before the flood"></div>
+    <div id="after"  class="map" role="application" aria-label="Map, flood layers after the flood"></div>
+  </div>
+  <div class="swipe-label swipe-left"  aria-hidden="true">Before &middot; 20 Oct 2024</div>
+  <div class="swipe-label swipe-right" aria-hidden="true">After &middot; 1 Nov 2024</div>
+
+  <button id="sheet-handle" aria-expanded="false" aria-controls="sidebar">
+    Layers &amp; findings
+  </button>
+
+  <aside id="sidebar" aria-label="Layers and findings">
+
+    <!-- ------------------------------------------------------- LAYERS -->
+    <section class="card">
+      <h2><button class="card-head" aria-expanded="true" aria-controls="b-layers">
+        Layers <span class="chev" aria-hidden="true">▾</span></button></h2>
+      <div class="card-body" id="b-layers">
+        <ul class="layers">
+
+          <li class="radar-group">
+            <label class="sw">
+              <input type="checkbox" id="t-compare" aria-describedby="d-compare">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Compare radar</span>
+            </label>
+            <p class="hint" id="d-compare">Slide to compare before and after
+               satellite radar</p>
+          </li>
+
+          <li class="radar-group" id="row-radar">
+            <label class="sw">
+              <input type="checkbox" id="t-radar" aria-describedby="d-radar">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Radar imagery</span>
+            </label>
+            <p class="hint" id="d-radar">Show raw radar image behind the layers</p>
+          </li>
+
+          <li>
+            <label class="sw">
+              <input type="checkbox" id="t-footprint" checked aria-describedby="d-footprint">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt"><span class="key key-flood"></span>Flood footprint</span>
+            </label>
+            <p class="hint" id="d-footprint">Areas the model classified as flooded</p>
+          </li>
+
+          <li class="emph">
+            <label class="sw">
+              <input type="checkbox" id="t-confidence" aria-describedby="d-confidence">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Confidence</span>
+            </label>
+            <p class="hint" id="d-confidence">How trustworthy the flood
+               classification is at each point</p>
+            <div id="legend-confidence" hidden>
+              <ul class="legend">
+                <li><span class="key" data-conf="high"></span>
+                    <b>High</b> — 99% of these pixels really were flooded</li>
+                <li><span class="key" data-conf="medium"></span>
+                    <b>Medium</b> — 54% correct</li>
+                <li><span class="key" data-conf="low"></span>
+                    <b>Low</b> — 34% correct</li>
+              </ul>
+              <p class="hint">Areas of the footprint below 70% probability carry no
+                 confidence class and stay unshaded. They are 90% of the
+                 footprint’s buildings.</p>
+            </div>
+          </li>
+
+          <li>
+            <label class="sw">
+              <input type="checkbox" id="t-reference" aria-describedby="d-reference">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt"><span class="key key-ref"></span>EMS Reference</span>
+            </label>
+            <p class="hint" id="d-reference">Official EU flood outline from
+               satellite imagery (Copernicus EMS)</p>
+          </li>
+
+          <li>
+            <label class="sw">
+              <input type="checkbox" id="t-buildings" aria-describedby="d-buildings">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Buildings</span>
+            </label>
+            <p class="hint" id="d-buildings">Buildings inside the flood footprint,
+               coloured by confidence</p>
+          </li>
+
+          <li>
+            <label class="sw">
+              <input type="checkbox" id="t-roads" aria-describedby="d-roads">
+              <span class="track" aria-hidden="true"></span>
+              <span class="txt">Roads</span>
+            </label>
+            <p class="hint" id="d-roads">Roads inside the flood footprint,
+               coloured by confidence</p>
+          </li>
+        </ul>
+
+        <div id="legend-assets" hidden>
+          <p class="legend-title">Buildings and roads by confidence</p>
+          <ul class="legend">
+            <li><span class="key" data-conf="high"></span>High</li>
+            <li><span class="key" data-conf="medium"></span>Medium</li>
+            <li><span class="key" data-conf="low"></span>Low</li>
+            <li><span class="key" data-conf="unclassed"></span>Unclassed (50–70% probability)</li>
+          </ul>
+        </div>
+
+        <p class="note">Click anywhere inside the flood footprint for the
+           probability, confidence and whether it agrees with the official map.</p>
+      </div>
+    </section>
+
+    <!-- ----------------------------------------------------- EXPOSURE -->
+    <section class="card">
+      <h2><button class="card-head" aria-expanded="false" aria-controls="b-exposure">
+        Exposure <span class="chev" aria-hidden="true">▾</span></button></h2>
+      <div class="card-body" id="b-exposure" hidden>
+        <p class="intro">Estimated buildings and road length inside the flood
+           area, at different confidence levels.</p>
+        <div class="tscroll"><table id="exposure-table"><caption class="sr-only">
+          Buildings and road length inside each flood estimate, with precision
+          against the official EMS reference</caption></table></div>
+        <p class="caveat" id="exposure-caveat"></p>
+      </div>
+    </section>
+
+    <!-- --------------------------------------------------- VALIDATION -->
+    <section class="card">
+      <h2><button class="card-head" aria-expanded="false" aria-controls="b-validation">
+        How accurate is this map? <span class="chev" aria-hidden="true">▾</span></button></h2>
+      <div class="card-body" id="b-validation" hidden>
+        <div id="cv-chart"></div>
+        <p id="cv-text"></p>
+        <p class="footnote" id="cv-note"></p>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------ METHODS -->
+    <section class="card">
+      <h2><button class="card-head" aria-expanded="false" aria-controls="b-methods">
+        How this map was made <span class="chev" aria-hidden="true">▾</span></button></h2>
+      <div class="card-body" id="b-methods" hidden>
+        <div id="methods-body"></div>
+      </div>
+    </section>
+
+    <footer id="credit">
+      <p class="who">Nelson Christopher, 2026</p>
+      <p class="built">Built with Sentinel-1 SAR data and open-source tools.</p>
+    </footer>
+
+  </aside>
+
+  <div id="loading" role="status" aria-live="polite">
+    <span class="spinner" aria-hidden="true"></span>
+    <span id="loading-text">Loading map data…</span>
+  </div>
+</main>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-compare@0.5.0/dist/maplibre-gl-compare.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

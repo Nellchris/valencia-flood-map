@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentinel-1 Radar Flood Mapping of the October 2024 Valencia Flash Flood</title>
+<meta name="description" content="Spatial validation and confidence assessment of a Sentinel-1 Random Forest flood map of the October 2024 Valencia flash flood.">
+<meta name="author" content="Nelson Christopher">
+<style>
+:root{
+  --flood:#3b82f6; --high:#0d9488; --med:#f59e0b; --low:#ea580c;
+  --grey:#9ca3af; --ref:#c026d3;
+  --ink:#1a1a1a; --ink2:#52525b; --rule:#e4e4e7; --bg:#fcfcfa;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font:17px/1.65 Georgia,"Iowan Old Style","Times New Roman",serif;
+}
+.wrap{max-width:800px; margin:0 auto; padding:56px 28px 90px}
+
+h1{font-size:30px; line-height:1.22; margin:0 0 6px; font-weight:700;
+   letter-spacing:-.015em}
+.byline{font-size:16px; color:var(--ink2); margin:0 0 4px}
+.dateline{font-size:14px; color:var(--ink2); margin:0 0 30px}
+h2{font-size:14px; letter-spacing:.09em; text-transform:uppercase;
+   font-family:system-ui,-apple-system,"Segoe UI",sans-serif; font-weight:700;
+   margin:38px 0 12px; padding-bottom:6px; border-bottom:1px solid var(--rule)}
+h3{font-size:16px; margin:22px 0 7px; font-weight:700}
+p{margin:0 0 14px}
+a{color:#1d4ed8}
+strong{font-weight:700}
+
+.abstract{
+  background:#fff; border:1px solid var(--rule); border-left:3px solid var(--flood);
+  padding:18px 22px; margin:0 0 10px; font-size:16px;
+}
+.abstract p{margin:0}
+.abstract .lbl{
+  font-family:system-ui,sans-serif; font-size:11px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink2); font-weight:700; display:block;
+  margin-bottom:7px;
+}
+
+figure{margin:26px 0; padding:0}
+figure img{width:100%; height:auto; display:block; border:1px solid var(--rule);
+           background:#fff}
+figcaption{
+  font-family:system-ui,-apple-system,sans-serif; font-size:13px;
+  color:var(--ink2); margin-top:9px; line-height:1.5;
+}
+figcaption b{color:var(--ink)}
+
+table{border-collapse:collapse; width:100%; margin:18px 0; font-size:14.5px;
+      font-family:system-ui,-apple-system,sans-serif}
+caption{
+  caption-side:bottom; text-align:left; font-size:13px; color:var(--ink2);
+  margin-top:9px; line-height:1.5;
+}
+th,td{padding:7px 9px; text-align:right; border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child{text-align:left}
+thead th{
+  font-size:11.5px; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--ink2); border-bottom:1.5px solid #a1a1aa;
+}
+tbody tr.hl{background:#fdf4ff}
+tbody tr.hl td:first-child{color:#86198f; font-weight:700}
+td.n{font-variant-numeric:tabular-nums}
+
+.keybox{
+  background:#fff; border:1px solid var(--rule); border-radius:6px;
+  padding:4px 20px 14px; margin:22px 0;
+}
+.keybox h3{font-family:system-ui,sans-serif; font-size:12px; letter-spacing:.08em;
+           text-transform:uppercase; color:var(--ink2); margin:14px 0 8px}
+.keybox ul{margin:0; padding-left:20px; font-size:15.5px}
+.keybox li{margin-bottom:6px}
+
+.flow{margin:24px 0}
+.flow svg{width:100%; height:auto; display:block}
+
+ol.refs{font-size:14.5px; padding-left:22px; line-height:1.55}
+ol.refs li{margin-bottom:9px}
+code{font:13.5px ui-monospace,Menlo,Consolas,monospace; background:#f4f4f5;
+     padding:1px 4px; border-radius:3px}
+
+footer{
+  margin-top:46px; padding-top:18px; border-top:1px solid var(--rule);
+  font-size:14px; color:var(--ink2);
+  font-family:system-ui,-apple-system,sans-serif;
+}
+
+@media (max-width:620px){
+  body{font-size:16px}
+  .wrap{padding:34px 18px 60px}
+  h1{font-size:24px}
+  table{font-size:13px}
+  th,td{padding:6px 5px}
+}
+
+@media print{
+  :root{--bg:#fff}
+  @page{margin:18mm 16mm}
+  body{font-size:10.5pt; line-height:1.5; background:#fff}
+  .wrap{max-width:none; padding:0}
+  h1{font-size:19pt}
+  h2{font-size:10pt; margin:18pt 0 7pt; page-break-after:avoid}
+  h3{font-size:11pt; page-break-after:avoid}
+  figure,table,.keybox,.abstract{page-break-inside:avoid}
+  figure img{border:1px solid #ccc}
+  a{color:#000; text-decoration:none}
+  a[href^="http"]::after{content:" (" attr(href) ")"; font-size:8pt; color:#555;
+                         word-break:break-all}
+  .noprint{display:none}
+  footer{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<h1>Sentinel-1 Radar Flood Mapping of the October 2024 Valencia Flash Flood:
+    Spatial Validation and Confidence Assessment</h1>
+<p class="byline">Nelson Christopher (Geodel)</p>
+<p class="dateline">2026</p>
+
+<div class="abstract">
+  <span class="lbl">Abstract</span>
+  <p>A Sentinel-1 radar flood map of the 29 October 2024 Valencia flash flood was
+  produced from a pre-event and post-event radiometrically terrain-corrected image
+  pair, classified with a Random Forest over backscatter change, terrain and
+  hydrological features. Validated against the Copernicus EMS EMSR773 delineation,
+  the classifier reached F1&nbsp;=&nbsp;0.505&nbsp;±&nbsp;0.001 under random
+  five-fold cross-validation but only 0.419&nbsp;±&nbsp;0.056 under spatially
+  blocked cross-validation — a 17% loss of apparent skill and a 62-fold increase in
+  variance between folds. Feature importance shows the model leaning on terrain
+  rather than radar, indicating it learns a topographic flood-susceptibility proxy
+  more than a radar flood signal. A confidence layer calibrated on out-of-fold
+  predictions separates a small, highly reliable core (99% correct, 9.5% of the
+  footprint) from a large band carrying no skill above the base rate. Exposure
+  estimates built on these tiers fail to bracket the official reference, and the
+  reasons are diagnosable. An interactive web map accompanies the study.</p>
+</div>
+
+<h2>1. Introduction</h2>
+<p>On 29 October 2024 a cut-off low (<i>DANA</i>) released over 400&nbsp;mm of rain
+in hours across the Valencia region of eastern Spain. Flash flooding through the
+Poyo and Turia catchments and the towns south of the city killed more than 220
+people, making it Spain's deadliest flood in decades. Rapid, wide-area mapping of
+the inundated extent matters for both emergency response and post-event analysis.</p>
+
+<p>Synthetic aperture radar is the usual instrument for this. It penetrates cloud
+and works at night, so unlike optical sensors it is not defeated by the weather
+system that caused the flood. Open water is normally easy to detect: a smooth
+surface reflects the radar pulse away from the sensor, producing a sharp drop in
+backscatter.</p>
+
+<p>The harder problem is knowing whether a flood map is any good. Flood extent is
+strongly spatially autocorrelated, so a randomly held-out test pixel usually sits
+metres from a training pixel of the same class. Random cross-validation therefore
+measures interpolation between neighbours rather than prediction, and reports a
+score the model will not reproduce on unseen ground. This study quantifies that
+gap for a real event, uses it to calibrate a confidence layer that states where the
+map can be trusted, and propagates the result into exposure estimates.</p>
+
+<h2>2. Data and Methods</h2>
+
+<h3>2.1 Imagery and reference</h3>
+<p>Two Sentinel-1A IW scenes were obtained as radiometrically terrain-corrected
+(RTC) gamma-nought products from the ASF HyP3 service: a pre-event pass on
+20&nbsp;October 2024 06:02&nbsp;UTC and a post-event pass on 1&nbsp;November 2024
+06:02&nbsp;UTC, both dual-polarisation (VV+VH), processed at 10&nbsp;m. The study
+area is a 0.4°&nbsp;×&nbsp;0.3° box over the Valencia metropolitan area and the
+Albufera wetland, reprojected to UTM&nbsp;30N on a 3345&nbsp;×&nbsp;3230 grid
+(1,080&nbsp;km²).</p>
+
+<p>The validation reference is the Copernicus Emergency Management Service rapid
+mapping activation <b>EMSR773</b> observed-flood delineation. Its provenance matters
+for the credibility of the whole exercise: of the 141.8&nbsp;km² delineated across
+the activation, 99.44% was derived from <i>optical</i> imagery (Landsat-8
+69.7&nbsp;km², Sentinel-2 47.2&nbsp;km², GeoEye-1 17.9&nbsp;km², WorldView-2
+6.2&nbsp;km²) and only 0.56% (0.79&nbsp;km²) from Sentinel-1. Validating a radar
+model against it is therefore not circular.</p>
+
+<h3>2.2 Feature stack</h3>
+<p>Six predictors were assembled on the common 10&nbsp;m grid: change in VV and VH
+backscatter (post minus pre, in dB); slope and Height Above Nearest Drainage (HAND)
+derived from the Copernicus GLO-30 DEM by D8 flow routing; Euclidean distance to the
+nearest OpenStreetMap waterway; and ESA WorldCover 10&nbsp;m land cover, one-hot
+encoded. Permanent water bodies (WorldCover class 80) were excluded throughout —
+they are standing water, not flood. The labelled domain, where valid radar and
+reference coverage overlap, contains 6,101,579 pixels of which 17.36% are flooded.</p>
+
+<div class="flow">
+<svg viewBox="0 0 800 196" xmlns="http://www.w3.org/2000/svg" role="img"
+     aria-label="Processing chain: Sentinel-1 pre and post images, DEM, OSM and land
+     cover feed a feature stack; a Random Forest produces a probability surface,
+     which is validated by random and spatial cross-validation and calibrated into
+     a confidence layer and exposure estimates.">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6"
+            markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#9ca3af"/>
+    </marker>
+    <style>
+      .bx{fill:#fff;stroke:#d4d4d8;stroke-width:1}
+      .t{font:11px system-ui,sans-serif;fill:#1a1a1a;text-anchor:middle}
+      .ts{font:9.5px system-ui,sans-serif;fill:#52525b;text-anchor:middle}
+      .ln{stroke:#9ca3af;stroke-width:1.2;fill:none;marker-end:url(#a)}
+    </style>
+  </defs>
+
+  <rect class="bx" x="4"   y="8"   width="132" height="40" rx="4" stroke="#3b82f6"/>
+  <text class="t"  x="70"  y="26">Sentinel-1 pre / post</text>
+  <text class="ts" x="70"  y="39">20 Oct · 1 Nov 2024</text>
+
+  <rect class="bx" x="4"   y="56"  width="132" height="40" rx="4"/>
+  <text class="t"  x="70"  y="74">GLO-30 DEM</text>
+  <text class="ts" x="70"  y="87">slope · HAND</text>
+
+  <rect class="bx" x="4"   y="104" width="132" height="40" rx="4"/>
+  <text class="t"  x="70"  y="122">OSM · WorldCover</text>
+  <text class="ts" x="70"  y="135">rivers · land cover</text>
+
+  <rect class="bx" x="182" y="56"  width="124" height="40" rx="4"/>
+  <text class="t"  x="244" y="74">Feature stack</text>
+  <text class="ts" x="244" y="87">6 predictors, 10 m</text>
+
+  <rect class="bx" x="352" y="56"  width="124" height="40" rx="4" stroke="#3b82f6"/>
+  <text class="t"  x="414" y="74">Random Forest</text>
+  <text class="ts" x="414" y="87">200 trees · depth 15</text>
+
+  <rect class="bx" x="522" y="8"   width="134" height="40" rx="4"/>
+  <text class="t"  x="589" y="26">Random 5-fold CV</text>
+  <text class="ts" x="589" y="39">F1 = 0.505</text>
+
+  <rect class="bx" x="522" y="56"  width="134" height="40" rx="4" stroke="#ea580c"/>
+  <text class="t"  x="589" y="74">Spatial blocked CV</text>
+  <text class="ts" x="589" y="87">2 km · F1 = 0.419</text>
+
+  <rect class="bx" x="522" y="104" width="134" height="40" rx="4" stroke="#0d9488"/>
+  <text class="t"  x="589" y="122">Confidence layer</text>
+  <text class="ts" x="589" y="135">from out-of-fold p</text>
+
+  <rect class="bx" x="522" y="152" width="134" height="38" rx="4"/>
+  <text class="t"  x="589" y="169">Exposure estimates</text>
+  <text class="ts" x="589" y="182">buildings · roads</text>
+
+  <rect class="bx" x="692" y="56"  width="104" height="40" rx="4"/>
+  <text class="t"  x="744" y="74">EMSR773</text>
+  <text class="ts" x="744" y="87">99.4% optical</text>
+
+  <path class="ln" d="M136 28 H160 V74 H178"/>
+  <path class="ln" d="M136 76 H178"/>
+  <path class="ln" d="M136 124 H160 V78 H178"/>
+  <path class="ln" d="M306 76 H348"/>
+  <path class="ln" d="M476 76 H496 V28 H518"/>
+  <path class="ln" d="M476 76 H518"/>
+  <path class="ln" d="M476 76 H496 V124 H518"/>
+  <path class="ln" d="M589 144 V148"/>
+  <path class="ln" d="M744 56 V38 H662"/>
+  <path class="ln" d="M744 96 V124 H662"/>
+</svg>
+</div>
+
+<h3>2.3 Classification and validation</h3>
+<p>A Random Forest (200 trees, maximum depth 15,
+<code>class_weight='balanced'</code>) was trained on a stratified sample of 300,000
+pixels. No hyperparameter tuning was performed — the question here is how skill is
+<i>measured</i>, not how high it can be pushed. A global Otsu threshold on ΔVV,
+screened for slope&nbsp;&gt;&nbsp;15° and HAND&nbsp;&gt;&nbsp;50&nbsp;m, provides a
+conventional baseline.</p>
+
+<p>Two cross-validation schemes were compared. Both use five folds, the same
+300,000-pixel training budget, the same model settings and evaluation on the full
+test fold; <b>the only difference is how pixels are assigned to folds</b>, so any
+score gap is attributable to spatial leakage alone. The random scheme assigns
+pixels independently and stratified by class. The spatial scheme tiles the grid
+into square blocks, shuffles the blocks, and assigns whole blocks to folds; every
+pixel within 500&nbsp;m of a differently-assigned block is excluded from both
+training and testing. Block sizes of 1, 2 and 4&nbsp;km were tested.</p>
+
+<p>Finally, confidence thresholds were calibrated on <i>out-of-fold</i> predictions
+from the 2&nbsp;km spatial scheme, where every pixel is scored by the fold model
+that never saw its block. Calibrating on in-sample probabilities would have baked
+in exactly the optimism the validation set out to measure.</p>
+
+<h2>3. Results</h2>
+
+<h3>3.1 Validation</h3>
+<p>The Otsu baseline reaches F1&nbsp;=&nbsp;0.303 (IoU 0.179, precision 0.242,
+recall 0.407). Notably it selects a threshold of <b>−0.44&nbsp;dB</b>, far from the
+−3&nbsp;dB commonly used in the flood-mapping literature and close to zero change —
+a direct sign that the ΔVV distribution is barely bimodal in this scene.</p>
+
+<p>The Random Forest reaches F1&nbsp;=&nbsp;0.505&nbsp;±&nbsp;0.001 under random
+five-fold cross-validation. Under 2&nbsp;km spatial blocking it falls to
+<b>0.419&nbsp;±&nbsp;0.056</b>: an absolute loss of 0.086, <b>17.0% of the apparent
+skill</b>, and a <b>62-fold increase</b> in between-fold standard deviation. The 1 km
+blocks score lower still (0.308&nbsp;±&nbsp;0.151) and 4 km blocks recover somewhat
+(0.450&nbsp;±&nbsp;0.126); the non-monotonic pattern reflects how much flooded area
+each fold happens to contain once blocks are large.</p>
+
+<figure>
+  <img src="figures/fig1_validation.png"
+       alt="Bar chart of F1 by validation scheme and a feature-importance comparison">
+  <figcaption><b>Figure 1.</b> (a) F1 under each validation scheme. Random
+  five-fold shows almost no spread across folds; spatial blocking both lowers the
+  mean and widens it dramatically. (b) Gini importance grouped by feature family.
+  Terrain and distance-to-river together account for 68.2% of importance under
+  random CV and 69.7% under spatial CV, while the radar change bands fall from
+  24.2% to 21.1%.</figcaption>
+</figure>
+
+<p>Feature importance is the diagnostic that explains the gap. HAND alone carries
+39.6% of importance, distance-to-river 19.6%, and the two radar change bands
+together only 24.2%. Under spatial cross-validation the radar contribution falls
+further to 21.1% while terrain and distance rise to 69.7%.</p>
+
+<h3>3.2 Confidence</h3>
+<p>Binned by predicted probability, the out-of-fold flood rate is almost flat from
+0.1 to 0.7 — every bin within a few points of the 15.4% base rate — and then breaks
+three times: +10.8 points at 0.7, +20.3 at 0.8, and +44.4 at 0.9. Those breakpoints
+were adopted as the class boundaries, replacing fixed thresholds.</p>
+
+<table>
+  <caption><b>Table 1.</b> Confidence classes, calibrated on out-of-fold spatial
+  predictions. Shares are of the 234.2 km² model footprint.</caption>
+  <thead><tr><th>Class</th><th>Probability</th><th>Area (km²)</th>
+    <th>% of footprint</th><th>Correct</th></tr></thead>
+  <tbody>
+    <tr><td>High</td><td class="n">≥ 0.90</td><td class="n">22.21</td>
+        <td class="n">9.5%</td><td class="n">99.0%</td></tr>
+    <tr><td>Medium</td><td class="n">0.80 – 0.90</td><td class="n">7.11</td>
+        <td class="n">3.0%</td><td class="n">53.8%</td></tr>
+    <tr><td>Low</td><td class="n">0.70 – 0.80</td><td class="n">32.93</td>
+        <td class="n">14.1%</td><td class="n">33.5%</td></tr>
+    <tr><td>Unclassed</td><td class="n">0.50 – 0.70</td><td class="n">171.96</td>
+        <td class="n">73.4%</td><td class="n">≈ base rate</td></tr>
+  </tbody>
+</table>
+
+<p>The high-confidence class is genuinely reliable — its error rate barely moves
+between in-sample (0.008) and out-of-fold (0.010) — but it is small, and it captures
+only 20.8% of the reference flood. Nearly three-quarters of the footprint by area
+falls in the unclassed 0.50–0.70 band, which the default <code>p&nbsp;&gt;&nbsp;0.5</code>
+rule would call flooded despite carrying no measurable skill.</p>
+
+<figure>
+  <img src="figures/fig2_confidence.png"
+       alt="Confidence map of the study area and a probability calibration curve">
+  <figcaption><b>Figure 2.</b> (a) The confidence layer. High confidence (teal)
+  concentrates almost entirely in the Albufera wetland and surrounding cropland.
+  (b) Calibration. The honest out-of-fold curve tracks the base rate until 0.70,
+  then breaks sharply; the in-sample curve is optimistic throughout the middle of
+  the range.</figcaption>
+</figure>
+
+<h3>3.3 Exposure</h3>
+<p>Within the study area OpenStreetMap records 126,337 buildings and 9,067&nbsp;km
+of drivable road. Four nested estimates were computed and compared with the same
+quantities inside the official reference.</p>
+
+<table>
+  <caption><b>Table 2.</b> Exposure by confidence tier, with precision and recall
+  measured per asset against the EMS reference.</caption>
+  <thead><tr><th>Estimate</th><th>Area (km²)</th><th>Buildings</th>
+    <th>Road (km)</th><th>Bldg prec.</th><th>Bldg recall</th></tr></thead>
+  <tbody>
+    <tr><td>High confidence</td><td class="n">22.2</td><td class="n">9</td>
+        <td class="n">95.8</td><td class="n">88.9%</td><td class="n">0.1%</td></tr>
+    <tr><td>High + Medium</td><td class="n">29.3</td><td class="n">385</td>
+        <td class="n">192.9</td><td class="n">46.5%</td><td class="n">1.8%</td></tr>
+    <tr><td>Full model footprint</td><td class="n">234.2</td><td class="n">23,732</td>
+        <td class="n">3,057.0</td><td class="n">20.5%</td><td class="n">49.5%</td></tr>
+    <tr class="hl"><td>EMS reference</td><td class="n">127.0</td><td class="n">9,827</td>
+        <td class="n">1,429.2</td><td class="n">—</td><td class="n">—</td></tr>
+  </tbody>
+</table>
+
+<p>The tiers do not bracket the reference: they jump from 385 buildings to 23,732,
+stepping straight over the true 9,827 without ever approaching it. The reason is
+structural. High confidence is effectively unreachable on built-up land — just 4 of
+63,353 high-confidence pixels fall on WorldCover class 50 — because urban
+double-bounce cancels the backscatter drop that flooding produces. Roads behave far
+better than buildings at every tier (99.3% precision in the high-confidence class,
+and F1 0.457 against 0.290 for the full footprint), because roads follow the
+low-lying cropland corridors where the radar signal is real.</p>
+
+<figure>
+  <img src="figures/fig3_exposure.png"
+       alt="Bar charts of buildings exposed per estimate and precision against recall">
+  <figcaption><b>Figure 3.</b> (a) Buildings inside each estimate against the EMS
+  reference (dashed). (b) Building-level precision and recall. The confidence tiers
+  trade almost all coverage for correctness; the full footprint does the reverse.
+  90% of the footprint's buildings sit in the unclassed 0.50–0.70 band.</figcaption>
+</figure>
+
+<h2>4. Discussion</h2>
+
+<h3>4.1 Why the radar signal is weak</h3>
+<p>Three physical factors suppress it. First, timing: the post-event pass is
+19.7&nbsp;hours after the flood crest recorded in the reference imagery and roughly
+three days after the peak. Flash floods in steep Mediterranean catchments drain
+quickly, so much of the water the reference captured had already gone when the
+satellite passed. Second, urban scattering: in built-up areas the dominant return is
+double-bounce between ground and wall, which <i>increases</i> with standing water
+and cancels the specular drop that flood detection relies on. Third, the single
+co-polarised change band carries limited information in vegetated and agricultural
+terrain, where surface roughness and crop state also shift backscatter between
+passes.</p>
+
+<h3>4.2 What spatial validation reveals</h3>
+<p>The 17% gap is not merely a lower number; it changes the interpretation of the
+model. Terrain features — HAND, slope and distance-to-river — are smooth and
+spatially continuous, so a model leaning on them can interpolate a randomly held-out
+pixel almost perfectly from its neighbours. That the radar bands contribute only a
+quarter of importance, and <i>less</i> under spatial blocking, indicates the
+classifier is largely reproducing a static topographic flood-susceptibility surface
+rather than detecting this particular flood. Such a model generalises poorly to a
+different event on the same terrain, and to the same event on different terrain —
+precisely what blocked validation exposes and random validation conceals. The 62×
+variance increase is arguably the more important result: it says a single accuracy
+figure for this map is not meaningful, because performance depends heavily on which
+part of the landscape is being asked about.</p>
+
+<h3>4.3 Confidence as honest communication</h3>
+<p>Rather than publish one footprint with one accuracy figure, the confidence layer
+states per-pixel where the map earns trust. The outcome is uncomfortable but usable:
+a 22&nbsp;km² core that is right 99% of the time, and a much larger area where the
+model is doing little better than guessing the base rate. A responder can act on the
+first and treat the second as a search hint. This framing also makes the exposure
+bounds interpretable — their failure to bracket the reference is legible as a
+property of radar flood mapping in cities, not as an unexplained error.</p>
+
+<h3>4.4 Limitations</h3>
+<p>The analysis uses a single post-event pass, so no temporal evolution is captured
+and the result is hostage to acquisition timing. InSAR coherence, which often
+separates flooded from dry urban areas where intensity cannot, was not used. 24% of
+the study area lies outside the Sentinel-1 swath and is unmapped, containing 3.0% of
+reference buildings and 7.5% of reference road length. The reference is itself a
+satellite-derived product with its own error, not ground truth, and no field
+validation was available. Finally, the reference's own timing differs from the radar
+pass, so some disagreement is real hydrological change rather than model error.</p>
+
+<h2>5. Conclusion</h2>
+<p>A Random Forest over Sentinel-1 backscatter change, terrain and hydrological
+features maps the October 2024 Valencia flood at F1&nbsp;=&nbsp;0.505 by
+conventional random cross-validation, but at 0.419 when validated on spatially
+disjoint blocks, with 62 times more variance between folds. Feature importance shows
+why: the model relies mainly on terrain, which random splitting lets it interpolate.
+Because flood extent is spatially autocorrelated, random cross-validation should not
+be treated as a default for this class of problem; <b>blocked validation ought to be
+reported as standard</b>, and the gap between the two is itself an informative
+diagnostic. Calibrating confidence on out-of-fold predictions turns the finding into
+something usable — a small core worth acting on, and an honest statement about the
+rest. The layers, metrics and exposure tables described here are available in an
+interactive map.</p>
+
+<div class="keybox">
+<h3>Reproducibility</h3>
+<ul>
+  <li>All figures and tables are generated from the processing outputs, not
+      transcribed; the scripts are in the repository.</li>
+  <li>Random seed 42 throughout; fold assignment is seeded per block size so the
+      2&nbsp;km folds used for confidence calibration are identical to those scored
+      in validation.</li>
+  <li>Full provenance for every input, including per-sensor attribution of the
+      reference, is in <code>provenance.csv</code>.</li>
+</ul>
+</div>
+
+<h2>References</h2>
+<ol class="refs">
+  <li>Copernicus Emergency Management Service (2024). <i>EMSR773: Flood in Spain</i>.
+      European Commission, Joint Research Centre. Rapid Mapping activation.
+      <a href="https://rapidmapping.emergency.copernicus.eu/EMSR773/">rapidmapping.emergency.copernicus.eu/EMSR773</a></li>
+  <li>Hogenson, K. et al. (2020). <i>Hybrid Pluggable Processing Pipeline (HyP3): A
+      cloud-native infrastructure for generic processing of SAR data</i>. Alaska
+      Satellite Facility. <a href="https://doi.org/10.5281/zenodo.4646138">doi:10.5281/zenodo.4646138</a></li>
+  <li>European Space Agency (2024). <i>Copernicus Sentinel-1 data</i>. Processed by
+      ESA and distributed by the Alaska Satellite Facility DAAC.
+      <a href="https://search.asf.alaska.edu/">search.asf.alaska.edu</a></li>
+  <li>Zanaga, D. et al. (2022). <i>ESA WorldCover 10 m 2021 v200</i>.
+      <a href="https://doi.org/10.5281/zenodo.7254221">doi:10.5281/zenodo.7254221</a></li>
+  <li>European Space Agency, Airbus (2022). <i>Copernicus DEM GLO-30, Global 30 m
+      Digital Elevation Model</i>.
+      <a href="https://doi.org/10.5270/ESA-c5d3d65">doi:10.5270/ESA-c5d3d65</a></li>
+  <li>OpenStreetMap contributors (2026). <i>Planet dump retrieved via the Overpass
+      API</i>. Open Database License (ODbL).
+      <a href="https://www.openstreetmap.org/">openstreetmap.org</a></li>
+  <li>Roberts, D. R. et al. (2017). Cross-validation strategies for data with
+      temporal, spatial, hierarchical, or phylogenetic structure. <i>Ecography</i>
+      40(8), 913–929. <a href="https://doi.org/10.1111/ecog.02881">doi:10.1111/ecog.02881</a></li>
+  <li>Otsu, N. (1979). A threshold selection method from gray-level histograms.
+      <i>IEEE Transactions on Systems, Man, and Cybernetics</i> 9(1), 62–66.
+      <a href="https://doi.org/10.1109/TSMC.1979.4310076">doi:10.1109/TSMC.1979.4310076</a></li>
+  <li>Nobre, A. D. et al. (2011). Height Above the Nearest Drainage — a
+      hydrologically relevant new terrain model. <i>Journal of Hydrology</i>
+      404(1–2), 13–29. <a href="https://doi.org/10.1016/j.jhydrol.2011.03.051">doi:10.1016/j.jhydrol.2011.03.051</a></li>
+</ol>
+
+<footer>
+  <p><b>Nelson Christopher (Geodel)</b>, 2026 · Built with Sentinel-1 SAR data and
+  open-source tools.<br>
+  Interactive map: <a href="../">valencia-flood-map</a> ·
+  Contains modified Copernicus Sentinel data 2024.</p>
+</footer>
+
+</div>
+</body>
+</html>
