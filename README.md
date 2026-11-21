@@ -7,7 +7,7 @@ An interactive web map of the October 2024 Valencia flash flood, built from Sent
 
 ## What this is
 
-A radar-based flood map covering the Horta Sud region southwest of Valencia, Spain, where flash flooding on 29 October 2024 killed over 200 people. The map classifies flooded areas using machine learning on satellite radar data, then honestly shows where the classification can and cannot be trusted.
+A radar-based flood map covering the Horta Sud region southwest of Valencia, Spain, where flash flooding on 29 October 2024. The map classifies flooded areas using machine learning on satellite radar data, then honestly shows where the classification can and cannot be trusted.
 
 ## Method
 Radar change detection — Compared Sentinel-1 SAR images from before (20 Oct) and after (1 Nov) the flood to measure backscatter change across the landscape.
